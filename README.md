@@ -1,0 +1,2 @@
+# lerna-learning
+基于Lerna管理packages的Monorepo项目最佳实践
