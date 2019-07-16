@@ -28,17 +28,61 @@
 
 5. **发版没有`CHANGELOG.md`**。 因为pkg-a、pkg-b都没有真正管理版本，所以也没有完善的CHANGELOG来记录自上个版本发布已来的变动。
 
-整个项目像是一个没有被管理起来的Monorepo。那什么又是Monorepo呢？
+整个项目像是一个没有被管理起来的 Monorepo。那什么又是 Monorepo 呢？
 
 ## Monorepo vs Multirepo
 
+Monorepo 的全称是 monolithic repository，即单体式仓库，与之对应的是 Multirepo(multiple repository)，这里的“单”和“多”是指每个仓库中所管理的模块数量。
 
+Multirepo 是比较传统的做法，即每一个 package 都单独用一个仓库来进行管理。例如：Rollup, ...
+
+Monorep 是把所有相关的 package 都放在一个仓库里进行管理，**每个 package 独立发布**。 例如：React, Angular, Babel, Jest, Umijs, Vue ...
+
+一图胜千言：
+
+![](./docs/multirepo&monorepo.png)
+
+当然到底哪一种管理方式更好，仁者见仁，智者见智。前者允许多元化发展（各项目可以有自己的构建工具、依赖管理策略、单元测试方法），后者希望集中管理，减少项目间的差异带来的沟通成本。
+
+虽然拆分子仓库、拆分子 NPM 包是进行项目隔离的天然方案，但当仓库内容出现关联时，没有任何一种调试方式比源码放在一起更高效。
+
+结合我们项目的实际场景和业务需要，天然的 MonoRepo ! 因为工程化的最终目的是让业务开发可以 100% 聚焦在业务逻辑上，那么这不仅仅是脚手架、框架需要从自动化、设计上解决的问题，这涉及到仓库管理的设计。
+
+一个理想的开发环境可以抽象成这样：
+
+“**只关心业务代码，可以直接跨业务复用而不关心复用方式，调试时所有代码都在源码中。**”
+
+在前端开发环境中，多 Git Repo，多 Npm 则是这个理想的阻力，它们导致复用要关心版本号，调试需要 Npm Link。而这些是 MonoRepo 最大的优势。
+
+上图中提到的利用相关工具就是今天的主角 Lerna ! Lerna是业界知名度最高的 Monorepo 管理工具，功能完整。
 
 ## Lerna
 
 ### Lerna是什么
 
-### Lerna能帮我们做什么
+> A tool for managing JavaScript projects with multiple packages.
+
+> Lerna is a tool that optimizes the workflow around managing multi-package repositories with git and npm.
+
+Lerna 是一个管理多个 npm 模块的工具，是 Babel 自己用来维护自己的 Monorepo 并开源出的一个项目。优化维护多包的工作流，解决多个包互相依赖，且发布需要手动维护多个包的问题。
+
+Lerna 现在已经被很多著名的项目组织使用，如：Babel, React, Vue, Angular, Ember, Meteor, Jest 。
+
+一个基本的 Lerna 管理的仓库结构如下：
+
+```
+lerna-repo/
+    ┣━ packages/
+    ┃     ┣━ package-a/
+    ┃     ┃      ┣━ ...
+    ┃     ┃      ┗━ package.json
+    ┃     ┗━ package-b/
+    ┃            ┣━ ...
+    ┃            ┗━ package.json
+    ┣━ ...
+    ┣━ lerna.json
+    ┗━ package.json
+```
 
 ### 开始使用
 
@@ -49,3 +93,9 @@
 ### 自动生成日志
 
 ### 最佳实践背后的工作流
+
+##  参考文献
+
+[手摸手教你玩转 Lerna](http://www.uedlinker.com/2018/08/17/lerna-trainning/)
+
+[精读《Monorepo 的优势》](https://mp.weixin.qq.com/s/f2ehHTNK9rx8jNBUyhSwAA)
