@@ -138,6 +138,14 @@ lerna publish
 
 ![](./docs/lerna_publish.png)
 
+如下是发布的情况，lerna会让你选择要发布的版本号，我发了@0.0.1-alpha.0 的版本。
+
+> **发布 npm 包需要登陆 npm 账号**
+
+![](./docs/lerna_publish_1.png)
+
+![](./docs/lerna_publish_2.png)
+
 ## Lerna的最佳实践
 
 ### standardjs
