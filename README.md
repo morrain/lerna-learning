@@ -86,6 +86,58 @@ lerna-repo/
 
 ### 开始使用
 
+#### 安装
+
+> 推荐全局安装，因为会经常用到 lerna 命令
+
+```
+npm i -g lerna
+```
+
+#### 项目构建
+
+1. 初始化
+
+```
+lerna init
+```
+> init 命令详情 请参考 [lerna init](https://github.com/lerna/lerna/blob/master/commands/init/README.md)
+
+![](./docs/lerna_init.png)
+
+
+2. 增加两个 packages
+
+```
+lerna create @mo-demo/cli
+lerna create @mo-demo/cli-shared-utils
+```
+> create 命令详情 请参考 [lerna create](https://github.com/lerna/lerna/blob/master/commands/create/README.md)
+
+![](./docs/lerna_create.png)
+
+3. 分别给相应的 package 增加依赖模块
+
+```
+lerna add chalk                                           // 为所有 package 增加 chalk 模块
+lerna add semver --scope @mo-demo/cli-shared-utils        // 为 @mo-demo/cli-shared-utils 增加 semver 模块
+lerna add @mo-demo/cli-shared-utils --scope @mo-demo/cli  // 增加内部模块之间的依赖
+
+```
+
+> add 命令详情 请参考 [lerna add](https://github.com/lerna/lerna/blob/master/commands/add/README.md)
+
+![](./docs/lerna_add.png)
+
+4. 发布
+
+```
+lerna publish
+```
+> publish 命令详情 请参考 [lerna publish](https://github.com/lerna/lerna/blob/master/commands/publish/README.md)
+
+![](./docs/lerna_publish.png)
+
 ## Lerna的最佳实践
 
 ### standardjs
@@ -99,3 +151,5 @@ lerna-repo/
 [手摸手教你玩转 Lerna](http://www.uedlinker.com/2018/08/17/lerna-trainning/)
 
 [精读《Monorepo 的优势》](https://mp.weixin.qq.com/s/f2ehHTNK9rx8jNBUyhSwAA)
+
+[使用lerna优雅地管理多个package](https://zhuanlan.zhihu.com/p/35237759)
