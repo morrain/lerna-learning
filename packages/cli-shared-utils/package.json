@@ -1,0 +1,33 @@
+{
+  "name": "@mo-demo/cli-shared-utils",
+  "version": "0.0.0",
+  "description": "a demo for lerna",
+  "keywords": [
+    "lerna",
+    "cli-shared-utils"
+  ],
+  "author": "kongchuiliang <626100676@qq.com>",
+  "homepage": "https://github.com/morrain/lerna-learning#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://morrain@github.com/morrain/lerna-learning.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/morrain/lerna-learning/issues"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "semver": "^6.2.0"
+  }
+}
