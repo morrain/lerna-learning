@@ -1,4 +1,4 @@
-# 基于Lerna管理packages的Monorepo项目最佳实践
+# 基于 Lerna 管理 packages 的 Monorepo 项目最佳实践
   [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 
@@ -207,6 +207,150 @@ lerna clean
 
 ## Lerna的最佳实践
 
+lerna不负责构建，测试等任务，它提出了一种集中管理package的目录模式，提供了一套自动化管理程序，让开发者不必再深耕到具体的组件里维护内容，在项目根目录就可以全局掌控，基于 npm scripts，使用者可以很好地完成组件构建，代码格式化等操作。接下来我们就来看看，如果基于 Lerna，并结合其它工具来搭建 Monorepo 项目的最佳实践。
+
+### 优雅的提交
+
+1. commitizen && cz-lerna-changelog
+
+    [commitizen](http://commitizen.github.io/cz-cli/) 是用来格式化 git commit message 的工具，它提供了一种问询式的方式去获取所需的提交信息。
+
+    [cz-lerna-changelog](https://github.com/atlassian/cz-lerna-changelog) 是专门为 Lerna 项目量身定制的提交规范，在问询的过程，会有类似影响哪些 package 的选择。如下：
+
+    ![](https://camo.githubusercontent.com/31e94d43e48b687eced3f805c0355be878b7531c/68747470733a2f2f7777772e657665726e6f74652e636f6d2f6c2f414156795a62336356627050306f4671596e6b70474d414649624257334a52474f4555422f696d6167652e706e67)
+
+    我们使用 commitizen 和 cz-lerna-changelog 来规范提交，为后面自动生成日志作好准备。
+
+    因为这是整个工程的开发依赖，所以在根目录安装：
+    ```
+    npm i -D commitizen
+    npm i -D cz-lerna-changelog
+    ```
+
+    安装完成后，在 package.json 中增加 config 字段，把 cz-lerna-changelog 配置给 commitizen。同时因为commitizen不是全局安全的，所以需要添加 scripts 脚本来执行 `git-cz`
+
+    ```json
+    {
+      "name": "root",
+      "private": true,
+      "scripts": {
+        "c": "git-cz"
+      },
+      "config": {
+        "commitizen": {
+          "path": "./node_modules/cz-lerna-changelog"
+        }
+      },
+      "devDependencies": {
+        "commitizen": "^3.1.1",
+        "cz-lerna-changelog": "^2.0.2",
+        "lerna": "^3.15.0"
+      }
+    }
+    ```
+
+   之后在常规的开发中就可以使用 `npm run c` 来根据提示一步一步输入，来完成代码的提交。
+
+   ![](./docs/commitizen.png)
+
+2. commitlint &&  husky
+
+    上面我们使用了 commitizen 来规范提交，但这个要靠开发自觉使用 `npm run c` 。万一忘记了，或者直接使用 `git commit` 提交怎么办？答案就是在提交时对提交信息进行校验，如果不符合要求就不让提交，并提示。校验的工作由 [commitlint](https://commitlint.js.org/#/) 来完成，校验的时机则由 [husky](https://github.com/typicode/husky) 来指定。 husky 继承了 Git 下所有的钩子，在触发钩子的时候，husky 可以阻止不合法的 commit,push 等等
+
+    ```bash
+    // 安装 commitlint 以及要遵守的规范
+    npm i -D @commitlint/cli @commitlint/config-conventional 
+    ```
+
+    ```js
+    // 在工程根目录为 commitlint 增加配置文件 commitlint.config.js 为commitlint 指定相应的规范
+    module.exports = { extends: ['@commitlint/config-conventional'] }
+
+    ```
+
+    ```
+    // 安装 husky
+    npm i -D husky
+    ```
+    ```json
+    // 在 package.json 中增加如下配置
+    "husky": {
+      "hooks": {
+        "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      }
+    }
+    ```
+
+    "commit-msg"是git提交时校验提交信息的钩子，当触发时便会使用 commitlit 来校验。安装配置完成后，想通过 `git commit` 或者其它第三方工具提交时，只要提交信息不符合规范就无法提交。**从而约束开发者使用 `npm run c` 来提交。**
+
+3. standardjs && lint-staged
+
+    除了规范提交信息，代码本身肯定也少了靠规范来统一风格。
+
+    [standardjs](https://standardjs.com/readme-zhcn.html)就是完整的一套 JavaScript 代码规范，自带 linter & 代码自动修正。 它无需配置，自动格式化代码并修正，提前发现风格以及程序问题。
+
+    [lint-staged](https://github.com/okonet/lint-staged) staged 是 Git 里的概念，表示暂存区，lint-staged 表示只检查并矫正暂存区中的文件。 一来提高校验效率，二来可以为老的项目带去巨大的方便。
+
+
+    ``` 
+    // 安装
+    npm i -D standard lint-staged
+    ```
+
+    ```json
+    // package.json
+    {
+      "name": "root",
+      "private": true,
+      "scripts": {
+        "c": "git-cz"
+      },
+      "config": {
+        "commitizen": {
+          "path": "./node_modules/cz-lerna-changelog"
+        }
+      },
+      "husky": {
+        "hooks": {
+          "pre-commit": "lint-staged",
+          "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+        }
+      },
+      "lint-staged": {
+        "*.js": [
+          "standard --fix",
+          "git add"
+        ]
+      },
+      "devDependencies": {
+        "@commitlint/cli": "^8.1.0",
+        "@commitlint/config-conventional": "^8.1.0",
+        "commitizen": "^3.1.1",
+        "cz-lerna-changelog": "^2.0.2",
+        "husky": "^3.0.0",
+        "lerna": "^3.15.0",
+        "lint-staged": "^9.2.0",
+        "standard": "^13.0.2"
+      }
+    }
+    ```
+
+    安装完成后，在 package.json 增加 lint-staged 配置，如上所示表示对暂存区中的 js 文件执行 `standard --fix` 校验并自动修复。那什么时候去校验呢，就又用到了上面安装的 husky ，**husky的配置中增加'pre-commit'的钩子用来执行 lint-staged 的校验操作**，如上所示。
+
+    此时提交 js 文件时，便会自动修正并校验错误。即保证了代码风格统一，又能提高代码质量。
+
+    
+
+
+
+
+
+
+
+
+
+
+
 ### standardjs
 
 ### 自动生成日志
@@ -220,3 +364,6 @@ lerna clean
 [精读《Monorepo 的优势》](https://mp.weixin.qq.com/s/f2ehHTNK9rx8jNBUyhSwAA)
 
 [使用lerna优雅地管理多个package](https://zhuanlan.zhihu.com/p/35237759)
+
+[用 husky 和 lint-staged 构建超溜的代码检查工作流](https://segmentfault.com/a/1190000009546913)
+
