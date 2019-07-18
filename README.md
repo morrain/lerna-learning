@@ -403,6 +403,8 @@ lerna不负责构建，测试等任务，它提出了一种集中管理package�
 5. 各 package 发布时只发布 dist 目录，不发布 src 目录
 6. 各 package 注入 LOCAL_DEBUG 环境变量， 在index.js 中区分是调试还是发布环境，调试环境 `ruquire(./src/index.js)` 保证所有源码可调试。发布环境 `ruquire(./dist/index.js)` 保证所有源码不被发布。
 
+> 因为 dist 是 Babel 编译后的目录，我们在搜索时不希望搜索它的内容，所以在工程的设置中把 dist 目录排除在搜索的范围之外。
+
 接下来，我们按上面的规范，搭建 package 的结构。
 
 **首先安装依赖**
@@ -516,6 +518,49 @@ export {                                         //导出 log 接口
     "b": "lerna exec -- babel src -d dist --config-file ../../babel.config.js"
   }
 ```
+
+**调试**
+
+我们使用vscode自带的调试功能调试，也可以使用 Node + Chrome 调试，看开发者习惯。我们就 vscode 为例，请参考 https://code.visualstudio.com/docs/editor/debugging。
+
+增加如下调试配置文件：
+
+```json
+// .vscode/launch.json
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "debug cli",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/babel-node",
+            "runtimeArgs": [
+                "${workspaceRoot}/packages/cli/src/index.js"
+            ],
+            "env": {
+                "LOCAL_DEBUG": "true"
+            },
+            "console": "integratedTerminal"
+        }
+    ]
+}
+
+```
+因为 src 的代码是 ES6 的，所以要使用 `babel-node`去跑调试，`@babel/node` 已经在前面安装过了。
+
+![](./docs/vs-debug.png)
+
+**最棒的是，可以直接使用单步调试，调到依赖的模块中去**，如上图，我们要执行 `@mo-demo/cli-shared-utils` 模块中的 log 方法，单步进入，会直接跳到 `@mo-demo/cli-shared-utils` src 源码中去执行。如下图
+
+![](./docs/vs-debug-1.png)
+
+
+## 结语
+
 
 
 
