@@ -1,3 +1,7 @@
-console.log('cli-shared-utils/index.js as cli-shared-utils entry exec!')
+const log = function (str) {
+  console.log(str)
+}
 
-console.log('cli-shared-utils/index.js as cli-shared-utils entry exec!')
+export {
+  log
+}

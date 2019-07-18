@@ -11,7 +11,7 @@
   "license": "MIT",
   "main": "index.js",
   "files": [
-    "src"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
