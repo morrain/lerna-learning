@@ -345,7 +345,44 @@ lerna不负责构建，测试等任务，它提出了一种集中管理package�
 
 有了之前的规范提交，自动生成日志便水到渠成了。再详细看下 `lerna publish` 时做了哪些事情：
 
-  1. 
+  1. 调用 `lerna version` 
+
+      1. 找出从上一个版本发布以来有过变更的 package
+      2. 提示开发者确定要发布的版本号
+      ![](./docs/lerna_version_w.png)
+      3. 将所有更新过的的 package 中的package.json的version字段更新
+      4. 将依赖更新过的 package 的 包中的依赖版本号更新
+      5. 更新 lerna.json 中的 version 字段
+      6. 提交上述修改，并打一个 tag 
+      7. 推送到 git 仓库
+
+      ![](./docs/lerna_version.png)
+
+  2. 使用 `npm publish` 将新版本推送到 npm
+
+  CHANGELOG 很明显是和 version 一一对应的，所以需要在 `lerna version` 中想办法，查看 [lerna version](https://github.com/lerna/lerna/blob/master/commands/version/README.md) 命令的详细说明后，会看到一个配置参数 `--conventional-commits`。没错，只要我们按规范提交后，在 `lerna version` 的过程中会便会自动生成当前这个版本的 CHANGELOG。 为了方便，不用每次输入参数，可以配置在 lerna.json中，如下：
+
+  ```json
+  {
+    "packages": [
+      "packages/*"
+    ],
+    "command": {
+      "bootstrap": {
+        "hoist": true
+      },
+      "version": {
+        "conventionalCommits": true
+      }
+    },
+    "ignoreChanges": [
+      "**/*.md"
+    ],
+    "version": "0.0.1-alpha.1"
+  }
+  ```
+
+  > `lerna version` 会检测从上一个版本发布以来的变动，但有一些文件的提交，我们不希望触发版本的变动，譬如 .md 文件的修改，并没有实际引起 package 逻辑的变化，不应该触发版本的变更。可以通过 `ignoreChanges` 配置排除。如上。
 
 ### 最佳实践背后的工作流
 
