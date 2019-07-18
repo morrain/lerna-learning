@@ -392,7 +392,132 @@ lerna不负责构建，测试等任务，它提出了一种集中管理package�
 > Lerna 在管理 package 的版本号上，提供了两种模式供选择 Fixed or Independent。默认是 Fixed，更多细节，以及 Lerna 的更多玩法，请参考官网文档： https://github.com/lerna/lerna/blob/master/README.md
 
 
-### 最佳实践背后的工作流
+### 编译、压缩、调试
+
+**采用 Monorepo 结构的项目，各个 package 的结构最好保持统一**  根据目前的项目状况，设计如下：
+
+1. 各 package 入口统一为 index.js
+2. 各 package 源码入口统一为 src/index.js
+3. 各 package 编译入口统一为 dist/index.js
+4. 各 package 统一使用 ES6 语法、使用 Babel 编译、压缩并输出到 dist
+5. 各 package 发布时只发布 dist 目录，不发布 src 目录
+6. 各 package 注入 LOCAL_DEBUG 环境变量， 在index.js 中区分是调试还是发布环境，调试环境 `ruquire(./src/index.js)` 保证所有源码可调试。发布环境 `ruquire(./dist/index.js)` 保证所有源码不被发布。
+
+接下来，我们按上面的规范，搭建 package 的结构。
+
+**首先安装依赖**
+
+```
+npm i -D @babel/cli @babel/core @babel/preset-env  // 使用 Babel 必备 详见官网用法
+npm i -D @babel/node                               // 用于调试 因为用了 import&export 等 ES6 的语法
+npm i -D babel-preset-minify                       // 用于压缩代码
+```
+
+> 由于各 package 的结构统一，所以类似 Babel 这样的工具，只在根目录安装就好了，不需要在各 package 中安装，简直是清爽的要死了。
+
+**增加 Babel 配置**
+
+```js
+// 根目录新建 babel.config.js 
+module.exports = function (api) {
+  api.cache(true)
+
+  const presets = [
+    [
+      '@babel/env',
+      {
+        targets: {
+          node: '8.9'
+        }
+      }
+    ]
+  ]
+
+  // 非本地调试模式才压缩代码，不然调试看不到实际变量名
+  if (!process.env['LOCAL_DEBUG']) {
+    presets.push([
+      'minify'
+    ])
+  }
+
+  const plugins = []
+
+  return {
+    presets,
+    plugins,
+    ignore: ['node_modules']
+  }
+}
+
+```
+
+**修改各 package 的代码**
+
+```js
+// @mo-demo/cli/index.js
+if (process.env.LOCAL_DEBUG) {
+  require('../src/index')                        // 如果是调试模式，加载src中的源码
+} else {
+  require('../dist/index')                       // dist会发到npm
+}
+
+// @mo-demo/cli/src/index.js
+import { log } from '@mo-demo/cli-shared-utils'  // 从 utils 模块引入依赖并使用 log 函数
+log('cli/index.js as cli entry exec!')
+
+// @mo-demo/cli/package.json
+{
+  "main": "index.js",
+  "files": [
+    "dist"                                       // 发布 dist 
+  ]
+}
+
+
+// @mo-demo/cli-shared-utils/index.js
+if (process.env.LOCAL_DEBUG) {
+  module.exports = require('./src/index')        // 如果是调试模式，加载src中的源码
+} else {
+  module.exports = require('./dist/index')       // dist会发到npm
+}
+
+// @mo-demo/cli-shared-utils/src/index.js
+const log = function (str) {
+  console.log(str)
+}
+export {                                         //导出 log 接口
+  log
+}
+
+// @mo-demo/cli-shared-utils/package.json
+{
+  "main": "index.js",
+  "files": [
+    "dist"
+  ]
+}
+```
+
+**修改发布的脚本**
+
+`npm run b` 用来对各 pacakge 执行 babel 的编译，从 src 目录输出出 dist 目录，使用根目录的配置文件 babel.config.js。
+
+`npm run p` 用来取代 `lerna publish`，在 publish 前先执行 `npm run b`来编译。
+
+其它常用的 lerna 命令也添加到 scripts 中来，方便使用。
+
+```json
+  // 工程根目录 package.json
+  "scripts": {
+    "c": "git-cz",
+    "i": "lerna bootstrap",
+    "u": "lerna clean",
+    "p": "npm run b && lerna publish",
+    "b": "lerna exec -- babel src -d dist --config-file ../../babel.config.js"
+  }
+```
+
+
 
 ##  参考文献
 
