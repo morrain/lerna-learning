@@ -217,7 +217,8 @@ lerna不负责构建，测试等任务，它提出了一种集中管理package�
 
     [cz-lerna-changelog](https://github.com/atlassian/cz-lerna-changelog) 是专门为 Lerna 项目量身定制的提交规范，在问询的过程，会有类似影响哪些 package 的选择。如下：
 
-    ![](https://camo.githubusercontent.com/31e94d43e48b687eced3f805c0355be878b7531c/68747470733a2f2f7777772e657665726e6f74652e636f6d2f6c2f414156795a62336356627050306f4671596e6b70474d414649624257334a52474f4555422f696d6167652e706e67)
+    ![](./docs/commit1.png)
+    ![](./docs/commit2.png)
 
     我们使用 commitizen 和 cz-lerna-changelog 来规范提交，为后面自动生成日志作好准备。
 
