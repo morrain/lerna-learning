@@ -27,6 +27,7 @@
     "url": "https://github.com/morrain/lerna-learning/issues"
   },
   "dependencies": {
+    "@babel/runtime-corejs2": "^7.5.5",
     "chalk": "^2.4.2",
     "semver": "^6.2.0"
   }

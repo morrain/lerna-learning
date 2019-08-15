@@ -19,7 +19,14 @@ module.exports = function (api) {
     ])
   }
 
-  const plugins = []
+  const plugins = [
+    [
+      '@babel/plugin-transform-runtime', // 新增加babel-runtime插件，解决polyfill
+      {
+        corejs: 2
+      }
+    ]
+  ]
 
   return {
     presets,
