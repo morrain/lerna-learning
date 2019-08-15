@@ -12,6 +12,7 @@ stages:
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
 cache:
+  key: ${CI_BUILD_REF_NAME}
   paths:
     - node_modules/
 
