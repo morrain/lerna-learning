@@ -2,7 +2,7 @@ const log = function (str) {
   console.log(str)
 }
 
-// test exact
+// test no-git-tag-version
 export {
   log
 }
