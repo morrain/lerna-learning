@@ -1,6 +1,6 @@
 {
   "name": "@mo-demo/cli",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "a demo for lerna",
   "keywords": [
     "lerna",
@@ -15,7 +15,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry":"https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.5.5",
-    "@mo-demo/cli-shared-utils": "^0.1.0-alpha.1",
+    "@mo-demo/cli-shared-utils": "^0.1.0-alpha.3",
     "chalk": "^2.4.2"
   }
 }

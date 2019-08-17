@@ -1,6 +1,6 @@
 {
   "name": "@mo-demo/cli-shared-utils",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.3",
   "description": "a demo for lerna",
   "keywords": [
     "lerna",
@@ -15,7 +15,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry":"https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/"
   },
   "repository": {
     "type": "git",

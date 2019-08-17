@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.3](https://gitlab.vmic.xyz/game2/lerna-learning/compare/v0.1.0-alpha.2...v0.1.0-alpha.3) (2019-08-17)
+
+
+### Bug Fixes
+
+* 更新图片，增加白色背景 ([de3a0e1](https://gitlab.vmic.xyz/game2/lerna-learning/commit/de3a0e1))
+
+
+### Features
+
+* node_modules增加分支的区分 ([c4bce82](https://gitlab.vmic.xyz/game2/lerna-learning/commit/c4bce82))
+* 增加gitlab ci的配置文件 ([dd1d0e5](https://gitlab.vmic.xyz/game2/lerna-learning/commit/dd1d0e5))
+* 增加runtime-corejs2,解决pollyfill的问题 ([4854736](https://gitlab.vmic.xyz/game2/lerna-learning/commit/4854736))
+* 增加runtime-corejs2,解决pollyfill的问题 ([8f884f8](https://gitlab.vmic.xyz/game2/lerna-learning/commit/8f884f8))
+* 指定registry,方便后面做CICD ([5833889](https://gitlab.vmic.xyz/game2/lerna-learning/commit/5833889))
+
+
+
+
+
 # [0.1.0-alpha.2](https://gitlab.vmic.xyz/game2/lerna-learning/compare/v0.1.0-alpha.1...v0.1.0-alpha.2) (2019-07-18)
 
 
