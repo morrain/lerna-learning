@@ -1,6 +1,6 @@
 {
   "name": "@mo-demo/cli-shared-utils",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.0-alpha.5",
   "description": "a demo for lerna",
   "keywords": [
     "lerna",

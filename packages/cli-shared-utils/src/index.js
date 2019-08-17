@@ -2,7 +2,7 @@ const log = function (str) {
   console.log(str)
 }
 
-// test change
+// 发正式版本
 export {
   log
 }

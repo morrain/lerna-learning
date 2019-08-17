@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.5](https://gitlab.vmic.xyz/game2/lerna-learning/compare/v0.1.0-alpha.4...v0.1.0-alpha.5) (2019-08-17)
+
+
+### Features
+
+* last commit ([1641327](https://gitlab.vmic.xyz/game2/lerna-learning/commit/1641327))
+
+
+
+
+
 # [0.1.0-alpha.4](https://gitlab.vmic.xyz/game2/lerna-learning/compare/v0.1.0-alpha.3...v0.1.0-alpha.4) (2019-08-17)
 
 

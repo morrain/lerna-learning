@@ -7,11 +7,15 @@
       "hoist": true
     },
     "version": {
-      "conventionalCommits": true
+      "conventionalCommits": true,
+      "allowBranch": [
+        "master",
+        "feature/*"
+      ]
     }
   },
   "ignoreChanges": [
     "**/*.md"
   ],
-  "version": "0.1.0-alpha.4"
+  "version": "0.1.0-alpha.5"
 }
