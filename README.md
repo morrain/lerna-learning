@@ -228,7 +228,7 @@ lerna不负责构建，测试等任务，它提出了一种集中管理package�
     npm i -D cz-lerna-changelog
     ```
 
-    安装完成后，在 package.json 中增加 config 字段，把 cz-lerna-changelog 配置给 commitizen。同时因为commitizen不是全局安全的，所以需要添加 scripts 脚本来执行 `git-cz`
+    安装完成后，在 package.json 中增加 config 字段，把 cz-lerna-changelog 配置给 commitizen。同时因为commitizen不是全局安装的，所以需要添加 scripts 脚本来执行 `git-cz`
 
     ```json
     {
